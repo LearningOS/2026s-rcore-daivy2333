@@ -1,0 +1,41 @@
+{
+  "deps": [
+    "use:[log::{Level, LevelFilter, Log, Metadata, Record}]"
+  ],
+  "file": "../src/logging.rs",
+  "hash": "811978c3fba4d842731f020982fcf835e052bff1b25e48327078d89debb936a7",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "enabled"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "log"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "flush"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "init"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "SimpleLogger"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.946238",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

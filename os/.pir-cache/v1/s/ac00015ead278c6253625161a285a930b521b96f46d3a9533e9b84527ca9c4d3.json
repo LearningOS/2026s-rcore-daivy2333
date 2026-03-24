@@ -1,0 +1,19 @@
+{
+  "deps": [],
+  "file": "../src/task/switch.S",
+  "hash": "ac00015ead278c6253625161a285a930b521b96f46d3a9533e9b84527ca9c4d3",
+  "lang": "S",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "__switch"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.950230",
+  "unit": {
+    "module": "task",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

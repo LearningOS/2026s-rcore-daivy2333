@@ -1,0 +1,26 @@
+{
+  "deps": [
+    "call:[trap_handler]"
+  ],
+  "file": "../src/trap/trap.S",
+  "hash": "bcc02a94beb3967987f7873c574cc31189d2099bb789125f8031f0e9dafebfe6",
+  "lang": "S",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "__alltraps"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "__restore"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.949602",
+  "unit": {
+    "module": "trap",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

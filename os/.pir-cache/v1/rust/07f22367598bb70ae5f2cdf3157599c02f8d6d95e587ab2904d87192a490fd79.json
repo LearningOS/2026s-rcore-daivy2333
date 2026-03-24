@@ -1,0 +1,19 @@
+{
+  "deps": [],
+  "file": "../src/syscall/fs.rs",
+  "hash": "07f22367598bb70ae5f2cdf3157599c02f8d6d95e587ab2904d87192a490fd79",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_write"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.949057",
+  "unit": {
+    "module": "syscall",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -1,0 +1,26 @@
+{
+  "deps": [
+    "use:[super::TaskContext]"
+  ],
+  "file": "../src/task/task.rs",
+  "hash": "93bf058a2735ac269101ce99829f3ca47131f723f74f3d2c9ca765775a7d6056",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TaskControlBlock"
+    },
+    {
+      "attrs": {},
+      "kind": "enum",
+      "name": "TaskStatus"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.950461",
+  "unit": {
+    "module": "task",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

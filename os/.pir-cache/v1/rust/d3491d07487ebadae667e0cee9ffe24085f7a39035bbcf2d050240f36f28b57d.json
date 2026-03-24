@@ -1,0 +1,32 @@
+{
+  "deps": [
+    "use:[crate::sbi::console_putchar]",
+    "use:[core::fmt::{self, Write}]"
+  ],
+  "file": "../src/console.rs",
+  "hash": "d3491d07487ebadae667e0cee9ffe24085f7a39035bbcf2d050240f36f28b57d",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "write_str"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "print"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "Stdout"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.948435",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

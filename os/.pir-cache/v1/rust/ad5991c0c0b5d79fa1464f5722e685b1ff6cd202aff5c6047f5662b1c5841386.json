@@ -1,0 +1,85 @@
+{
+  "deps": [
+    "use:[crate::config::MAX_APP_NUM]",
+    "use:[crate::loader::{get_num_app, init_app_cx}]",
+    "use:[crate::sync::UPSafeCell]",
+    "use:[lazy_static::*]",
+    "use:[switch::__switch]"
+  ],
+  "file": "../src/task/mod.rs",
+  "hash": "ad5991c0c0b5d79fa1464f5722e685b1ff6cd202aff5c6047f5662b1c5841386",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_first_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mark_current_suspended"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mark_current_exited"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "find_next_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_next_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_first_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_next_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mark_current_suspended"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mark_current_exited"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "suspend_current_and_run_next"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "exit_current_and_run_next"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TaskManager"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TaskManagerInner"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.950834",
+  "unit": {
+    "module": "task",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -1,0 +1,80 @@
+{
+  "deps": [
+    "use:[crate::sync::UPSafeCell]",
+    "use:[crate::trap::TrapContext]",
+    "use:[core::arch::asm]",
+    "use:[lazy_static::*]",
+    "use:[crate::board::QEMUExit]"
+  ],
+  "file": "../src/batch.rs",
+  "hash": "6418e3847c28998c05466de4e43bfe56beb6cd2ffcb40605278d473f8331fa25",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_sp"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "push_context"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_sp"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "print_app_info"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_current_app"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "move_to_next_app"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "init"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "print_app_info"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_next_app"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "KernelStack"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "UserStack"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "AppManager"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.946484",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -1,0 +1,29 @@
+{
+  "deps": [],
+  "file": "../src/main.rs",
+  "hash": "ee030f45241541256b8f2586b0395c7e475fa3db7fcd85376df3f9a320f7d3db",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "clear_bss"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "kernel_log_info"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "rust_main"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.948650",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

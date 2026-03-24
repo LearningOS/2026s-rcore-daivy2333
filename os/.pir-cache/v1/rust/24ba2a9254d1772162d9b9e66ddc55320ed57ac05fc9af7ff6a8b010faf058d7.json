@@ -1,0 +1,41 @@
+{
+  "deps": [
+    "use:[crate::{\n    task::{exit_current_and_run_next, suspend_current_and_run_next},\n    timer::get_time_us,\n}]"
+  ],
+  "file": "../src/syscall/process.rs",
+  "hash": "24ba2a9254d1772162d9b9e66ddc55320ed57ac05fc9af7ff6a8b010faf058d7",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_exit"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_yield"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_get_time"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_trace"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TimeVal"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.948787",
+  "unit": {
+    "module": "syscall",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

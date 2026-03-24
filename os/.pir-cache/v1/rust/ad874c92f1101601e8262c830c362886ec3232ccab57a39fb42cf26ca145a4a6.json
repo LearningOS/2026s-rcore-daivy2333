@@ -1,0 +1,31 @@
+{
+  "deps": [
+    "use:[riscv::register::sstatus::{self, Sstatus, SPP}]"
+  ],
+  "file": "../src/trap/context.rs",
+  "hash": "ad874c92f1101601e8262c830c362886ec3232ccab57a39fb42cf26ca145a4a6",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "set_sp"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "app_init_context"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TrapContext"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.949177",
+  "unit": {
+    "module": "trap",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

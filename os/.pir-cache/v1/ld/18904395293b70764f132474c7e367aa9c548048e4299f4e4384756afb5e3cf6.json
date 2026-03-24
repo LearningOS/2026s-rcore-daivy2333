@@ -1,0 +1,69 @@
+{
+  "deps": [],
+  "file": "../src/linker.ld",
+  "hash": "18904395293b70764f132474c7e367aa9c548048e4299f4e4384756afb5e3cf6",
+  "lang": "LD",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "ld_entry",
+      "name": "_start"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "skernel"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "stext"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "etext"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "srodata"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "erodata"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "sdata"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "edata"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "sbss"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "ebss"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "ekernel"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.945442",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -1,0 +1,119 @@
+{
+  "deps": [],
+  "file": "../src/link_app.S",
+  "hash": "c07bb1805b510facec34b5b1dfb50b9993f4fd127d9b17ad6d08edf241268d73",
+  "lang": "S",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "_num_app"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_0_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_0_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_1_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_1_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_2_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_2_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_3_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_3_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_4_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_4_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_5_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_5_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_6_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_6_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_7_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_7_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_8_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_8_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_9_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_9_end"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.947176",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

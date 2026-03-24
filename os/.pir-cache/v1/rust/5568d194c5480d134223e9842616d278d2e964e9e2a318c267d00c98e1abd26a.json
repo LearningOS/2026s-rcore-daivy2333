@@ -1,0 +1,29 @@
+{
+  "deps": [],
+  "file": "../src/task/context.rs",
+  "hash": "5568d194c5480d134223e9842616d278d2e964e9e2a318c267d00c98e1abd26a",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "zero_init"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "goto_restore"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TaskContext"
+    }
+  ],
+  "timestamp": "2026-03-24T07:32:40.950350",
+  "unit": {
+    "module": "task",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}
