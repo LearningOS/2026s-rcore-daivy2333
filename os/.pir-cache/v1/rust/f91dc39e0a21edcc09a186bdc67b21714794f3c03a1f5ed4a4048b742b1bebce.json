@@ -1,0 +1,49 @@
+{
+  "deps": [
+    "use:[super::TaskContext]",
+    "use:[crate::config::TRAP_CONTEXT_BASE]",
+    "use:[crate::mm::{\n    kernel_stack_position, MapPermission, MemorySet, PhysPageNum, VirtAddr, KERNEL_SPACE,\n}]",
+    "use:[crate::trap::{trap_handler, TrapContext}]"
+  ],
+  "file": "../src/task/task.rs",
+  "hash": "f91dc39e0a21edcc09a186bdc67b21714794f3c03a1f5ed4a4048b742b1bebce",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_trap_cx"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_user_token"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "change_program_brk"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TaskControlBlock"
+    },
+    {
+      "attrs": {},
+      "kind": "enum",
+      "name": "TaskStatus"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.157998",
+  "unit": {
+    "module": "task",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -1,0 +1,64 @@
+{
+  "deps": [
+    "use:[crate::task::{change_program_brk, exit_current_and_run_next, suspend_current_and_run_next, current_user_token, current_mmap, current_munmap}]",
+    "use:[crate::mm::{translated_refmut, check_permission, MapPermission, VirtAddr}]",
+    "use:[crate::config::PAGE_SIZE]",
+    "use:[crate::timer::get_time_us]"
+  ],
+  "file": "../src/syscall/process.rs",
+  "hash": "e61bcda0b10bf460f8c90c13af6a4013a72c99fa5ce7778d612f39b385caf4d4",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_exit"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_yield"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_get_time"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_trace"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_mmap"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_munmap"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_sbrk"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "prot_to_perm"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TimeVal"
+    }
+  ],
+  "timestamp": "2026-03-24T11:28:20.363936",
+  "unit": {
+    "module": "syscall",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

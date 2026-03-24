@@ -1,0 +1,167 @@
+{
+  "deps": [
+    "use:[super::{frame_alloc, FrameTracker}]",
+    "use:[super::{PTEFlags, PageTable, PageTableEntry}]",
+    "use:[super::{PhysAddr, PhysPageNum, VirtAddr, VirtPageNum}]",
+    "use:[super::{StepByOne, VPNRange}]",
+    "use:[crate::config::{\n    KERNEL_STACK_SIZE, MEMORY_END, PAGE_SIZE, TRAMPOLINE, TRAP_CONTEXT_BASE, USER_STACK_SIZE,\n}]",
+    "use:[crate::sync::UPSafeCell]",
+    "use:[alloc::collections::BTreeMap]",
+    "use:[alloc::sync::Arc]",
+    "use:[alloc::vec::Vec]",
+    "use:[core::arch::asm]",
+    "use:[lazy_static::*]",
+    "use:[riscv::register::satp]"
+  ],
+  "file": "../src/mm/memory_set.rs",
+  "hash": "67e355e3106bc271d76a1bed5a6cb2f99ed5966de5217888fc53f7304ca3ce9e",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new_bare"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "token"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "insert_framed_area"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "push"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "map_trampoline"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new_kernel"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from_elf"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "activate"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "translate"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "shrink_to"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "append_to"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "check_range"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mmap"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "munmap"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "map_one"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "unmap_one"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "map"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "unmap"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "shrink_to"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "append_to"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "copy_data"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "kernel_stack_position"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "remap_test"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "MemorySet"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "MapArea"
+    },
+    {
+      "attrs": {},
+      "kind": "enum",
+      "name": "MapType"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "MapPermission"
+    }
+  ],
+  "timestamp": "2026-03-24T11:28:20.365299",
+  "unit": {
+    "module": "mm",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

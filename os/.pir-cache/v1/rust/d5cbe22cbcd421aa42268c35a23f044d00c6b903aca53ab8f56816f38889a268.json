@@ -1,0 +1,57 @@
+{
+  "deps": [
+    "use:[crate::config::{TRAMPOLINE, TRAP_CONTEXT_BASE}]",
+    "use:[crate::syscall::syscall]",
+    "use:[crate::task::{\n    current_trap_cx, current_user_token, exit_current_and_run_next, suspend_current_and_run_next,\n}]",
+    "use:[crate::timer::set_next_trigger]",
+    "use:[core::arch::{asm, global_asm}]",
+    "use:[riscv::register::{\n    mtvec::TrapMode,\n    scause::{self, Exception, Interrupt, Trap},\n    sie, stval, stvec,\n}]",
+    "use:[riscv::register::sepc]"
+  ],
+  "file": "../src/trap/mod.rs",
+  "hash": "d5cbe22cbcd421aa42268c35a23f044d00c6b903aca53ab8f56816f38889a268",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "init"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "set_kernel_trap_entry"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "set_user_trap_entry"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "enable_timer_interrupt"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "trap_handler"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "trap_return"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "trap_from_kernel"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.156355",
+  "unit": {
+    "module": "trap",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

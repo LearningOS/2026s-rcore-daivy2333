@@ -1,0 +1,16 @@
+{
+  "deps": [
+    "use:[fs::*]",
+    "use:[process::*]"
+  ],
+  "file": "../src/syscall/mod.rs",
+  "hash": "5d8da5bc01a1c95581d87e742fd858cda448c3e04278fe074d0957f44f8ec56d",
+  "lang": "Rust",
+  "symbols": [],
+  "timestamp": "2026-03-24T10:33:16.153676",
+  "unit": {
+    "module": "syscall",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

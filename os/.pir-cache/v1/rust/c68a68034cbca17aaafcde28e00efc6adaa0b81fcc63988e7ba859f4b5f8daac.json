@@ -1,0 +1,127 @@
+{
+  "deps": [
+    "use:[crate::mm::{MapPermission, VirtAddr}]",
+    "use:[crate::loader::{get_app_data, get_num_app}]",
+    "use:[crate::sync::UPSafeCell]",
+    "use:[crate::trap::TrapContext]",
+    "use:[alloc::vec::Vec]",
+    "use:[lazy_static::*]",
+    "use:[switch::__switch]"
+  ],
+  "file": "../src/task/mod.rs",
+  "hash": "c68a68034cbca17aaafcde28e00efc6adaa0b81fcc63988e7ba859f4b5f8daac",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_first_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mark_current_suspended"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mark_current_exited"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "find_next_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_current_token"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_current_trap_cx"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "change_current_program_brk"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_next_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_first_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "run_next_task"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mark_current_suspended"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "mark_current_exited"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "suspend_current_and_run_next"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "exit_current_and_run_next"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "current_user_token"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "current_trap_cx"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "change_program_brk"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "current_mmap"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "current_munmap"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TaskManager"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TaskManagerInner"
+    }
+  ],
+  "timestamp": "2026-03-24T11:28:20.367250",
+  "unit": {
+    "module": "task",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -1,0 +1,130 @@
+{
+  "deps": [
+    "use:[super::{frame_alloc, FrameTracker, PhysPageNum, PhysAddr, StepByOne, VirtAddr, VirtPageNum}]",
+    "use:[alloc::vec]",
+    "use:[alloc::vec::Vec]",
+    "use:[bitflags::*]",
+    "use:[crate::config::PAGE_SIZE]"
+  ],
+  "file": "../src/mm/page_table.rs",
+  "hash": "58158ab998ff75a49bbe755dcc62ad3eb43435873a3a6330083b0829c8e89da2",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "empty"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "ppn"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "flags"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "is_valid"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "readable"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "writable"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "executable"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from_token"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "find_pte_create"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "find_pte"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "map"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "unmap"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "translate"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "token"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "translated_byte_buffer"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "translated_refmut"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "check_permission"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "PTEFlags"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "PageTableEntry"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "PageTable"
+    }
+  ],
+  "timestamp": "2026-03-24T11:28:20.365776",
+  "unit": {
+    "module": "mm",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

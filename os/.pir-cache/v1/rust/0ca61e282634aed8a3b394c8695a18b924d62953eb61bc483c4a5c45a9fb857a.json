@@ -1,0 +1,21 @@
+{
+  "deps": [
+    "use:[address::{StepByOne, VPNRange}]"
+  ],
+  "file": "../src/mm/mod.rs",
+  "hash": "0ca61e282634aed8a3b394c8695a18b924d62953eb61bc483c4a5c45a9fb857a",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "init"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.155934",
+  "unit": {
+    "module": "mm",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

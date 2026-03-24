@@ -1,0 +1,36 @@
+{
+  "deps": [
+    "use:[core::arch::asm]"
+  ],
+  "file": "../src/sbi.rs",
+  "hash": "177c2696217104a4f23fbeb297eee1db9b304ee42aef793a1825aa2f79d047f7",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sbi_call"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "set_timer"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "console_putchar"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "shutdown"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.152066",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

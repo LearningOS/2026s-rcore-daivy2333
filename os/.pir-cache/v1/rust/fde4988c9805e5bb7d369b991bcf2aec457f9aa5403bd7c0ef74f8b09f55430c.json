@@ -1,0 +1,41 @@
+{
+  "deps": [
+    "use:[core::arch::asm]"
+  ],
+  "file": "../src/boards/qemu.rs",
+  "hash": "fde4988c9805e5bb7d369b991bcf2aec457f9aa5403bd7c0ef74f8b09f55430c",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "exit"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "exit_success"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "exit_failure"
+    },
+    {
+      "attrs": {},
+      "kind": "trait",
+      "name": "QEMUExit"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "RISCV64"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.157015",
+  "unit": {
+    "module": "boards",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

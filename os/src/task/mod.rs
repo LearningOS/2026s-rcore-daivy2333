@@ -8,19 +8,19 @@
 //!
 //! Be careful when you see `__switch` ASM function in `switch.S`. Control flow around this function
 //! might not be what you expect.
-
+use crate::mm::{MapPermission, VirtAddr};
 mod context;
 mod switch;
 #[allow(clippy::module_inception)]
 mod task;
-
 use crate::loader::{get_app_data, get_num_app};
+
 use crate::sync::UPSafeCell;
 use crate::trap::TrapContext;
 use alloc::vec::Vec;
 use lazy_static::*;
 use switch::__switch;
-pub use task::{TaskControlBlock, TaskStatus};
+pub use task::{TaskControlBlock, TaskStatus, MAX_SYSCALL_NUM};
 
 pub use context::TaskContext;
 
@@ -153,6 +153,7 @@ impl TaskManager {
             panic!("All applications completed!");
         }
     }
+
 }
 
 /// Run the first task in task list.
@@ -201,4 +202,37 @@ pub fn current_trap_cx() -> &'static mut TrapContext {
 /// Change the current 'Running' task's program break
 pub fn change_program_brk(size: i32) -> Option<usize> {
     TASK_MANAGER.change_current_program_brk(size)
+}
+/// mmap: map memory region for current task
+pub fn current_mmap(start: usize, len: usize, perm: MapPermission) -> isize {
+    let mut inner = TASK_MANAGER.inner.exclusive_access();
+    let cur = inner.current_task;
+    inner.tasks[cur].memory_set.mmap(VirtAddr::from(start), len, perm)
+}
+
+/// munmap: unmap memory region for current task
+pub fn current_munmap(start: usize, len: usize) -> isize {
+    let mut inner = TASK_MANAGER.inner.exclusive_access();
+    let cur = inner.current_task;
+    inner.tasks[cur].memory_set.munmap(VirtAddr::from(start), len)
+}
+
+/// Get the syscall count for the current task
+pub fn get_syscall_count(syscall_id: usize) -> isize {
+    if syscall_id >= MAX_SYSCALL_NUM {
+        return -1;
+    }
+    let inner = TASK_MANAGER.inner.exclusive_access();
+    let cur = inner.current_task;
+    inner.tasks[cur].syscall_count[syscall_id] as isize
+}
+
+/// Increment the syscall count for the current task
+pub fn increment_syscall_count(syscall_id: usize) {
+    if syscall_id >= MAX_SYSCALL_NUM {
+        return;
+    }
+    let mut inner = TASK_MANAGER.inner.exclusive_access();
+    let cur = inner.current_task;
+    inner.tasks[cur].syscall_count[syscall_id] += 1;
 }

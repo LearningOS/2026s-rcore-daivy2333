@@ -1,0 +1,22 @@
+{
+  "deps": [
+    "use:[crate::mm::translated_byte_buffer]",
+    "use:[crate::task::current_user_token]"
+  ],
+  "file": "../src/syscall/fs.rs",
+  "hash": "053f97e6a09458e26d1f35f3b322d0d0039f5815fe207231bdaf1b7d0fd05bbb",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "sys_write"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.153806",
+  "unit": {
+    "module": "syscall",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

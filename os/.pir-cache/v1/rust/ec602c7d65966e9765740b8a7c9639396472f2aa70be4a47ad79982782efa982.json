@@ -1,0 +1,31 @@
+{
+  "deps": [
+    "use:[crate::trap::trap_return]"
+  ],
+  "file": "../src/task/context.rs",
+  "hash": "ec602c7d65966e9765740b8a7c9639396472f2aa70be4a47ad79982782efa982",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "zero_init"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "goto_trap_return"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "TaskContext"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.157700",
+  "unit": {
+    "module": "task",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

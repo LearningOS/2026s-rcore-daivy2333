@@ -1,0 +1,91 @@
+{
+  "deps": [
+    "use:[super::{PhysAddr, PhysPageNum}]",
+    "use:[crate::config::MEMORY_END]",
+    "use:[crate::sync::UPSafeCell]",
+    "use:[alloc::vec::Vec]",
+    "use:[core::fmt::{self, Debug, Formatter}]",
+    "use:[lazy_static::*]"
+  ],
+  "file": "../src/mm/frame_allocator.rs",
+  "hash": "9a1a5de829fbed57abb6a8ffccb6b95b7092bdb6387a0adb7aa4e9fa52beb232",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "fmt"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "drop"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "init"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "alloc"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "dealloc"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "init_frame_allocator"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "frame_alloc"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "frame_dealloc"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "frame_allocator_test"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "FrameTracker"
+    },
+    {
+      "attrs": {},
+      "kind": "trait",
+      "name": "FrameAllocator"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "StackFrameAllocator"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.154037",
+  "unit": {
+    "module": "mm",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}
