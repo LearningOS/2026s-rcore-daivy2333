@@ -1,0 +1,13 @@
+{
+  "deps": [],
+  "file": "../src/sync/mod.rs",
+  "hash": "e97788692c380f340285364033d5171a94a2c37a9de25f1cae14188117a34790",
+  "lang": "Rust",
+  "symbols": [],
+  "timestamp": "2026-03-24T10:33:16.157326",
+  "unit": {
+    "module": "sync",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

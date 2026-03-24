@@ -1,0 +1,24 @@
+{
+  "deps": [],
+  "file": "../src/loader.rs",
+  "hash": "f602f7917aa777064a50322f7fc4be09b246a28005de67cd97b919b949ab2fa5",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_num_app"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_app_data"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.150333",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

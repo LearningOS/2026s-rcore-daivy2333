@@ -1,0 +1,234 @@
+{
+  "deps": [],
+  "file": "../src/link_app.S",
+  "hash": "0d6e85dcb49a11ad1aca4abf62074323e4c9d45a93d4ebb045b7a35ba052e59f",
+  "lang": "S",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "_num_app"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "_app_names"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_0_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_0_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_1_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_1_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_2_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_2_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_3_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_3_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_4_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_4_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_5_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_5_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_6_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_6_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_7_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_7_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_8_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_8_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_9_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_9_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_10_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_10_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_11_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_11_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_12_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_12_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_13_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_13_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_14_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_14_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_15_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_15_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_16_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_16_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_17_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_17_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_18_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_18_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_19_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_19_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_20_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "app_20_end"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.151815",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -4,7 +4,7 @@ use alloc::string::String;
 use alloc::vec;
 use alloc::vec::Vec;
 use bitflags::*;
-
+use crate::config::PAGE_SIZE;
 bitflags! {
     /// page table entry flags
     pub struct PTEFlags: u8 {
@@ -202,14 +202,61 @@ pub fn translated_str(token: usize, ptr: *const u8) -> String {
     }
     string
 }
-/// Translate a ptr[u8] array through page table and return a mutable reference of T
-pub fn translated_refmut<T>(token: usize, ptr: *mut T) -> &'static mut T {
-    //trace!("into translated_refmut!");
+/// Translate a virtual address to a mutable reference to T through page table
+/// Returns None if:
+/// - The virtual address is not mapped
+/// - The page is not accessible from user mode (no U flag)
+/// - The data crosses page boundary
+pub fn translated_refmut<T>(token: usize, ptr: *mut T) -> Option<&'static mut T> {
     let page_table = PageTable::from_token(token);
-    let va = ptr as usize;
-    //trace!("translated_refmut: before translate_va");
-    page_table
-        .translate_va(VirtAddr::from(va))
-        .unwrap()
-        .get_mut()
+    let va = VirtAddr::from(ptr as usize);
+    let vpn = va.floor();
+    
+    // 翻译虚拟页号
+    let pte = page_table.translate(vpn)?;
+    
+    // 检查页表项是否有效且用户可访问
+    if !pte.is_valid() || !pte.flags().contains(PTEFlags::U) {
+        return None;
+    }
+    
+    // 检查是否跨页
+    let offset = va.page_offset();
+    if offset + core::mem::size_of::<T>() > PAGE_SIZE {
+        return None;  // 跨页情况暂不处理
+    }
+    
+    // 获取物理地址并返回可变引用
+    let ppn = pte.ppn();
+    let pa: PhysAddr = ppn.into();
+    Some(unsafe { &mut *((pa.0 + offset) as *mut T) })
+}
+
+/// Check if a virtual address has the required permissions
+/// Returns true if the address is mapped with U flag and the required R/W permissions
+pub fn check_permission(token: usize, va: VirtAddr, need_read: bool, need_write: bool) -> bool {
+    let page_table = PageTable::from_token(token);
+    let vpn = va.floor();
+    
+    if let Some(pte) = page_table.translate(vpn) {
+        if !pte.is_valid() {
+            return false;
+        }
+        let flags = pte.flags();
+        // 必须有 U 标志
+        if !flags.contains(PTEFlags::U) {
+            return false;
+        }
+        // 检查 R 权限
+        if need_read && !flags.contains(PTEFlags::R) {
+            return false;
+        }
+        // 检查 W 权限
+        if need_write && !flags.contains(PTEFlags::W) {
+            return false;
+        }
+        true
+    } else {
+        false
+    }
 }

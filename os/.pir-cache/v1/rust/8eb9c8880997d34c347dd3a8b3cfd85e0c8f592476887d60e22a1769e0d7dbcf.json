@@ -1,0 +1,15 @@
+{
+  "deps": [
+    "use:[super::TaskContext]"
+  ],
+  "file": "../src/task/switch.rs",
+  "hash": "8eb9c8880997d34c347dd3a8b3cfd85e0c8f592476887d60e22a1769e0d7dbcf",
+  "lang": "Rust",
+  "symbols": [],
+  "timestamp": "2026-03-24T10:33:16.158215",
+  "unit": {
+    "module": "task",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

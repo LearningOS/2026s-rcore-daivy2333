@@ -2,12 +2,14 @@
 use alloc::sync::Arc;
 
 use crate::{
+    config::PAGE_SIZE,
     loader::get_app_data_by_name,
-    mm::{translated_refmut, translated_str},
+    mm::{translated_refmut, translated_str, MapPermission},
     task::{
-        add_task, current_task, current_user_token, exit_current_and_run_next,
-        suspend_current_and_run_next,
+        add_task, current_mmap, current_munmap, current_task, current_user_token,
+        exit_current_and_run_next, suspend_current_and_run_next,
     },
+    timer::get_time_us,
 };
 
 #[repr(C)]
@@ -94,7 +96,9 @@ pub fn sys_waitpid(pid: isize, exit_code_ptr: *mut i32) -> isize {
         // ++++ temporarily access child PCB exclusively
         let exit_code = child.inner_exclusive_access().exit_code;
         // ++++ release child PCB
-        *translated_refmut(inner.memory_set.token(), exit_code_ptr) = exit_code;
+        if let Some(exit_code_ref) = translated_refmut(inner.memory_set.token(), exit_code_ptr) {
+            *exit_code_ref = exit_code;
+        }
         found_pid as isize
     } else {
         -2
@@ -102,33 +106,68 @@ pub fn sys_waitpid(pid: isize, exit_code_ptr: *mut i32) -> isize {
     // ---- release current PCB automatically
 }
 
-/// YOUR JOB: get time with second and microsecond
-/// HINT: You might reimplement it with virtual memory management.
-/// HINT: What if [`TimeVal`] is splitted by two pages ?
-pub fn sys_get_time(_ts: *mut TimeVal, _tz: usize) -> isize {
-    trace!(
-        "kernel:pid[{}] sys_get_time NOT IMPLEMENTED",
-        current_task().unwrap().pid.0
-    );
-    -1
+/// get time with second and microsecond
+pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
+    trace!("kernel: sys_get_time");
+    let us = get_time_us();
+    let token = current_user_token();
+
+    if let Some(ts_ref) = translated_refmut(token, ts) {
+        ts_ref.sec = us / 1_000_000;
+        ts_ref.usec = us % 1_000_000;
+        0
+    } else {
+        -1
+    }
 }
 
-/// YOUR JOB: Implement mmap.
-pub fn sys_mmap(_start: usize, _len: usize, _port: usize) -> isize {
-    trace!(
-        "kernel:pid[{}] sys_mmap NOT IMPLEMENTED",
-        current_task().unwrap().pid.0
-    );
-    -1
+/// translated_refmut 只检查 U 标志，不检查 R/W 标志。如果需要严格检查权限，需要额外实现权限检查函数。
+/// mmap: map memory region
+pub fn sys_mmap(start: usize, len: usize, prot: usize) -> isize {
+    trace!("kernel: sys_mmap");
+    
+    // 参数校验：页对齐
+    if start % PAGE_SIZE != 0 {
+        return -1;
+    }
+    
+    // 参数校验：prot 有效
+    if prot & !0x7 != 0 {
+        return -1;  // 其他位必须为 0
+    }
+    if prot & 0x7 == 0 {
+        return -1;  // 无意义权限
+    }
+    
+    // 长度为 0 视为成功
+    if len == 0 {
+        return 0;
+    }
+    
+    // 转换权限：prot 格式 -> MapPermission 格式
+    let mut perm = MapPermission::U;  // 必须有 U 标志
+    if prot & 0x1 != 0 { perm |= MapPermission::R; }
+    if prot & 0x2 != 0 { perm |= MapPermission::W; }
+    if prot & 0x4 != 0 { perm |= MapPermission::X; }
+    
+    current_mmap(start, len, perm)
 }
 
-/// YOUR JOB: Implement munmap.
-pub fn sys_munmap(_start: usize, _len: usize) -> isize {
-    trace!(
-        "kernel:pid[{}] sys_munmap NOT IMPLEMENTED",
-        current_task().unwrap().pid.0
-    );
-    -1
+/// munmap: unmap memory region
+pub fn sys_munmap(start: usize, len: usize) -> isize {
+    trace!("kernel: sys_munmap");
+    
+    // 参数校验：页对齐
+    if start % PAGE_SIZE != 0 {
+        return -1;
+    }
+    
+    // 长度为 0 视为成功
+    if len == 0 {
+        return 0;
+    }
+    
+    current_munmap(start, len)
 }
 
 /// change data segment size
@@ -141,21 +180,45 @@ pub fn sys_sbrk(size: i32) -> isize {
     }
 }
 
-/// YOUR JOB: Implement spawn.
-/// HINT: fork + exec =/= spawn
-pub fn sys_spawn(_path: *const u8) -> isize {
-    trace!(
-        "kernel:pid[{}] sys_spawn NOT IMPLEMENTED",
-        current_task().unwrap().pid.0
-    );
-    -1
+/// spawn: create a new process and execute the program
+pub fn sys_spawn(path: *const u8) -> isize {
+    trace!("kernel:pid[{}] sys_spawn", current_task().unwrap().pid.0);
+    let token = current_user_token();
+    let path = translated_str(token, path);
+    
+    if let Some(data) = get_app_data_by_name(path.as_str()) {
+        let current_task = current_task().unwrap();
+        let new_task = current_task.spawn(data);
+        let new_pid = new_task.pid.0;
+        // 将新任务加入调度队列
+        add_task(new_task);
+        new_pid as isize
+    } else {
+        -1  // 无效的文件名
+    }
 }
 
-// YOUR JOB: Set task priority.
-pub fn sys_set_priority(_prio: isize) -> isize {
-    trace!(
-        "kernel:pid[{}] sys_set_priority NOT IMPLEMENTED",
-        current_task().unwrap().pid.0
-    );
-    -1
+/// Set task priority for stride scheduling
+/// syscall ID: 140
+/// Returns prio if successful, -1 if invalid (prio < 2)
+pub fn sys_set_priority(prio: isize) -> isize {
+    trace!("kernel:pid[{}] sys_set_priority({})", current_task().unwrap().pid.0, prio);
+    if prio < 2 {
+        return -1;
+    }
+    let task = current_task().unwrap();
+    let mut inner = task.inner_exclusive_access();
+    inner.priority = prio as usize;
+    prio
 }
+/*
+
+fn prot_to_perm(prot: usize) -> MapPermission {
+    let mut perm = MapPermission::U;  // 用户态可访问
+    if prot & 0x1 != 0 { perm |= MapPermission::R; }
+    if prot & 0x2 != 0 { perm |= MapPermission::W; }
+    if prot & 0x4 != 0 { perm |= MapPermission::X; }
+    perm
+}
+
+*/

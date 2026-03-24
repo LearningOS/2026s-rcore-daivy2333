@@ -1,0 +1,26 @@
+{
+  "deps": [
+    "use:[core::cell::{RefCell, RefMut}]"
+  ],
+  "file": "../src/sync/up.rs",
+  "hash": "579f43af3aaf9b29501ced9d3b447b5ebf3f43e4373ed5fab5a9d0efb9ebb1db",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "exclusive_access"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "UPSafeCell"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.157195",
+  "unit": {
+    "module": "sync",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

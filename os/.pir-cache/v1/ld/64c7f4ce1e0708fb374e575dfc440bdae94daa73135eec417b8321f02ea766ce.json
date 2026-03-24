@@ -1,0 +1,79 @@
+{
+  "deps": [],
+  "file": "../src/linker.ld",
+  "hash": "64c7f4ce1e0708fb374e575dfc440bdae94daa73135eec417b8321f02ea766ce",
+  "lang": "LD",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "ld_entry",
+      "name": "_start"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "skernel"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "stext"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "strampoline"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "etext"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "srodata"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "erodata"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "sdata"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "edata"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "sbss_with_stack"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "sbss"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "ebss"
+    },
+    {
+      "attrs": {},
+      "kind": "ld_symbol",
+      "name": "ekernel"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.149815",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

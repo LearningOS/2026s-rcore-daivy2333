@@ -1,0 +1,13 @@
+{
+  "deps": [],
+  "file": "../src/config.rs",
+  "hash": "a7742c3e938902ebcfdbc2447fb77d2293863280b45cbf582a7232061f259cdb",
+  "lang": "Rust",
+  "symbols": [],
+  "timestamp": "2026-03-24T10:33:16.150226",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

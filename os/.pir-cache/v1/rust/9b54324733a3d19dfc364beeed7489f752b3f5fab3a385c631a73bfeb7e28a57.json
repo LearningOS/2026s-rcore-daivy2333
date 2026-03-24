@@ -1,0 +1,34 @@
+{
+  "deps": [
+    "use:[crate::config::KERNEL_HEAP_SIZE]",
+    "use:[buddy_system_allocator::LockedHeap]",
+    "use:[alloc::boxed::Box]",
+    "use:[alloc::vec::Vec]"
+  ],
+  "file": "../src/mm/heap_allocator.rs",
+  "hash": "9b54324733a3d19dfc364beeed7489f752b3f5fab3a385c631a73bfeb7e28a57",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "handle_alloc_error"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "init_heap"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "heap_test"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.154931",
+  "unit": {
+    "module": "mm",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -13,6 +13,9 @@
 //!
 //! Be careful when you see `__switch` ASM function in `switch.S`. Control flow around this function
 //! might not be what you expect.
+use crate::mm::{MapPermission, VirtAddr};
+use alloc::sync::Arc;
+
 mod context;
 mod id;
 mod manager;
@@ -21,12 +24,10 @@ mod switch;
 #[allow(clippy::module_inception)]
 mod task;
 
-use crate::loader::get_app_data_by_name;
-use alloc::sync::Arc;
 use lazy_static::*;
-pub use manager::{fetch_task, TaskManager};
+pub use manager::{fetch_task, TaskManager, TASK_MANAGER};
 use switch::__switch;
-pub use task::{TaskControlBlock, TaskStatus};
+pub use task::{TaskControlBlock, TaskStatus, MAX_SYSCALL_NUM, BIG_STRIDE};
 
 pub use context::TaskContext;
 pub use id::{kstack_alloc, pid_alloc, KernelStack, PidHandle};
@@ -35,20 +36,34 @@ pub use processor::{
     current_task, current_trap_cx, current_user_token, run_tasks, schedule, take_current_task,
     Processor,
 };
+
+lazy_static! {
+    /// Creation of initial process
+    ///
+    /// Generally, the first task in task list is an idle task (we call it zero process later).
+    /// But in ch4, we load apps statically, so the first task is a real app.
+    pub static ref INITPROC: Arc<TaskControlBlock> = Arc::new(TaskControlBlock::new(
+        crate::loader::get_app_data_by_name("ch5b_initproc").unwrap()
+    ));
+}
+
 /// Suspend the current 'Running' task and run the next task in task list.
 pub fn suspend_current_and_run_next() {
-    // There must be an application running.
     let task = take_current_task().unwrap();
-
+    
     // ---- access current TCB exclusively
     let mut task_inner = task.inner_exclusive_access();
     let task_cx_ptr = &mut task_inner.task_cx as *mut TaskContext;
     // Change status to Ready
     task_inner.task_status = TaskStatus::Ready;
+    
+    // 更新 stride: stride += BIG_STRIDE / priority
+    task_inner.stride += BIG_STRIDE / task_inner.priority;
+    
     drop(task_inner);
     // ---- release current PCB
-
-    // push back to ready queue.
+    
+    // push back to ready queue
     add_task(task);
     // jump to scheduling cycle
     schedule(task_cx_ptr);
@@ -101,17 +116,41 @@ pub fn exit_current_and_run_next(exit_code: i32) {
     schedule(&mut _unused as *mut _);
 }
 
-lazy_static! {
-    /// Creation of initial process
-    ///
-    /// the name "initproc" may be changed to any other app name like "usertests",
-    /// but we have user_shell, so we don't need to change it.
-    pub static ref INITPROC: Arc<TaskControlBlock> = Arc::new(TaskControlBlock::new(
-        get_app_data_by_name("ch5b_initproc").unwrap()
-    ));
-}
-
 ///Add init process to the manager
 pub fn add_initproc() {
     add_task(INITPROC.clone());
+}
+
+/// mmap: map memory region for current task
+pub fn current_mmap(start: usize, len: usize, perm: MapPermission) -> isize {
+    let task = current_task().unwrap();
+    let mut inner = task.inner_exclusive_access();
+    inner.memory_set.mmap(VirtAddr::from(start), len, perm)
+}
+
+/// munmap: unmap memory region for current task
+pub fn current_munmap(start: usize, len: usize) -> isize {
+    let task = current_task().unwrap();
+    let mut inner = task.inner_exclusive_access();
+    inner.memory_set.munmap(VirtAddr::from(start), len)
+}
+
+/// Get the syscall count for the current task
+pub fn get_syscall_count(syscall_id: usize) -> isize {
+    if syscall_id >= MAX_SYSCALL_NUM {
+        return -1;
+    }
+    let task = current_task().unwrap();
+    let inner = task.inner_exclusive_access();
+    inner.syscall_count[syscall_id] as isize
+}
+
+/// Increment the syscall count for the current task
+pub fn increment_syscall_count(syscall_id: usize) {
+    if syscall_id >= MAX_SYSCALL_NUM {
+        return;
+    }
+    let task = current_task().unwrap();
+    let mut inner = task.inner_exclusive_access();
+    inner.syscall_count[syscall_id] += 1;
 }

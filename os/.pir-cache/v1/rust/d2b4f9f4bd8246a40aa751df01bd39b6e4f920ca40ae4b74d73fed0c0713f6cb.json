@@ -1,0 +1,228 @@
+{
+  "deps": [
+    "use:[super::PageTableEntry]",
+    "use:[crate::config::{PAGE_SIZE, PAGE_SIZE_BITS}]",
+    "use:[core::fmt::{self, Debug, Formatter}]"
+  ],
+  "file": "../src/mm/address.rs",
+  "hash": "d2b4f9f4bd8246a40aa751df01bd39b6e4f920ca40ae4b74d73fed0c0713f6cb",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "fmt"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "fmt"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "fmt"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "fmt"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "floor"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "ceil"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "page_offset"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "aligned"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "floor"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "ceil"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "page_offset"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "aligned"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "from"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_mut"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_pte_array"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_bytes_array"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_mut"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "step"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_start"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_end"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "into_iter"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "new"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "next"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "PhysAddr"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "VirtAddr"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "PhysPageNum"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "VirtPageNum"
+    },
+    {
+      "attrs": {},
+      "kind": "trait",
+      "name": "StepByOne"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "SimpleRange"
+    },
+    {
+      "attrs": {},
+      "kind": "struct",
+      "name": "SimpleRangeIterator"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.155667",
+  "unit": {
+    "module": "mm",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

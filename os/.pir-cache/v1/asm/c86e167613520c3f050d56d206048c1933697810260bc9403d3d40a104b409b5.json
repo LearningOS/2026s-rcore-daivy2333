@@ -1,0 +1,31 @@
+{
+  "deps": [
+    "call:[rust_main]"
+  ],
+  "file": "../src/entry.asm",
+  "hash": "c86e167613520c3f050d56d206048c1933697810260bc9403d3d40a104b409b5",
+  "lang": "ASM",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "_start"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "boot_stack_lower_bound"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "boot_stack_top"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.152725",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

@@ -1,0 +1,38 @@
+{
+  "deps": [
+    "use:[crate::config::CLOCK_FREQ]",
+    "use:[crate::sbi::set_timer]",
+    "use:[riscv::register::time]"
+  ],
+  "file": "../src/timer.rs",
+  "hash": "94a454c59206e6c49e36aa18b542417492ab6c55d19ce3e0a66290fc2ee7ff42",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_time"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_time_ms"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "get_time_us"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "set_next_trigger"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.149994",
+  "unit": {
+    "module": "src",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

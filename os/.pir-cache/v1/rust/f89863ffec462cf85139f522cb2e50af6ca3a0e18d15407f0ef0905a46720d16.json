@@ -1,0 +1,29 @@
+{
+  "deps": [
+    "use:[std::io::{Result, Write}]",
+    "use:[std::fs::{File, read_dir}]"
+  ],
+  "file": "../build.rs",
+  "hash": "f89863ffec462cf85139f522cb2e50af6ca3a0e18d15407f0ef0905a46720d16",
+  "lang": "Rust",
+  "symbols": [
+    {
+      "attrs": {
+        "entry": "true"
+      },
+      "kind": "func",
+      "name": "main"
+    },
+    {
+      "attrs": {},
+      "kind": "func",
+      "name": "insert_app_data"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.148492",
+  "unit": {
+    "module": "os",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}

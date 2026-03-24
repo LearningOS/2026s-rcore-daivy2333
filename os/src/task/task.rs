@@ -9,9 +9,13 @@ use alloc::sync::{Arc, Weak};
 use alloc::vec::Vec;
 use core::cell::RefMut;
 
-/// Task control block structure
-///
-/// Directly save the contents that will not change during running
+/// Maximum number of syscall types to track
+pub const MAX_SYSCALL_NUM: usize = 500;
+/// BigStride constant for stride scheduling
+pub const BIG_STRIDE: usize = 100000;
+/// Default priority for new processes
+pub const DEFAULT_PRIORITY: usize = 16;
+/// The task control block (TCB) of a task.
 pub struct TaskControlBlock {
     // Immutable
     /// Process identifier
@@ -68,6 +72,15 @@ pub struct TaskControlBlockInner {
 
     /// Program break
     pub program_brk: usize,
+
+    /// System call count for each syscall number
+    pub syscall_count: [usize; MAX_SYSCALL_NUM],
+
+    /// Process priority for stride scheduling (>= 2)
+    pub priority: usize,
+    
+    /// Current stride for stride scheduling
+    pub stride: usize,
 }
 
 impl TaskControlBlockInner {
@@ -118,6 +131,9 @@ impl TaskControlBlock {
                     exit_code: 0,
                     heap_bottom: user_sp,
                     program_brk: user_sp,
+                    syscall_count: [0; MAX_SYSCALL_NUM],
+                    priority: DEFAULT_PRIORITY,
+                    stride: 0,
                 })
             },
         };
@@ -191,6 +207,9 @@ impl TaskControlBlock {
                     exit_code: 0,
                     heap_bottom: parent_inner.heap_bottom,
                     program_brk: parent_inner.program_brk,
+                    syscall_count: [0; MAX_SYSCALL_NUM],
+                    priority: parent_inner.priority, 
+                    stride: 0,
                 })
             },
         });
@@ -235,6 +254,60 @@ impl TaskControlBlock {
         } else {
             None
         }
+    }
+
+    /// spawn a new process from elf_data
+    pub fn spawn(self: &Arc<Self>, elf_data: &[u8]) -> Arc<Self> {
+        // 创建新的地址空间（不复制父进程）
+        let (memory_set, user_sp, entry_point) = MemorySet::from_elf(elf_data);
+        let trap_cx_ppn = memory_set
+            .translate(VirtAddr::from(TRAP_CONTEXT_BASE).into())
+            .unwrap()
+            .ppn();
+        
+        // 分配 pid 和内核栈
+        let pid_handle = pid_alloc();
+        let kernel_stack = kstack_alloc();
+        let kernel_stack_top = kernel_stack.get_top();
+        
+        // 创建新的 TCB
+        let task_control_block = Arc::new(TaskControlBlock {
+            pid: pid_handle,
+            kernel_stack,
+            inner: unsafe {
+                UPSafeCell::new(TaskControlBlockInner {
+                    trap_cx_ppn,
+                    base_size: user_sp,
+                    task_cx: TaskContext::goto_trap_return(kernel_stack_top),
+                    task_status: TaskStatus::Ready,
+                    memory_set,
+                    parent: Some(Arc::downgrade(self)),  // 设置父进程
+                    children: Vec::new(),
+                    exit_code: 0,
+                    heap_bottom: user_sp,
+                    program_brk: user_sp,
+                    syscall_count: [0; MAX_SYSCALL_NUM],
+                    // 新增字段（stride 调度）
+                    priority: 16,      // 默认优先级
+                    stride: 0,         // 初始 stride
+                })
+            },
+        });
+        
+        // 将子进程添加到父进程的 children 列表
+        self.inner_exclusive_access().children.push(task_control_block.clone());
+        
+        // 初始化 trap context
+        let trap_cx = task_control_block.inner_exclusive_access().get_trap_cx();
+        *trap_cx = TrapContext::app_init_context(
+            entry_point,
+            user_sp,
+            KERNEL_SPACE.exclusive_access().token(),
+            kernel_stack_top,
+            trap_handler as usize,
+        );
+        
+        task_control_block
     }
 }
 

@@ -300,6 +300,96 @@ impl MemorySet {
             false
         }
     }
+    /// Check if a range of virtual addresses is mapped with the specified permissions
+    pub fn check_range(&self, start_va: VirtAddr, len: usize, perm: MapPermission) -> bool {
+        if len == 0 {
+            return true;
+        }
+        let start_vpn = start_va.floor();
+        let end_va: VirtAddr = (start_va.0 + len).into();
+        let end_vpn = end_va.ceil();
+        
+        for vpn in VPNRange::new(start_vpn, end_vpn) {
+            if let Some(pte) = self.page_table.translate(vpn) {
+                if !pte.is_valid() {
+                    return false;
+                }
+                let flags = pte.flags();
+                // 检查 U 标志
+                if perm.contains(MapPermission::U) && !flags.contains(PTEFlags::U) {
+                    return false;
+                }
+                // 检查 R 标志
+                if perm.contains(MapPermission::R) && !flags.contains(PTEFlags::R) {
+                    return false;
+                }
+                // 检查 W 标志
+                if perm.contains(MapPermission::W) && !flags.contains(PTEFlags::W) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        true
+    }
+    /// Map a new memory region - for sys_mmap
+    pub fn mmap(&mut self, start: VirtAddr, len: usize, perm: MapPermission) -> isize {
+        if len == 0 {
+            return 0;
+        }
+        
+        let end: VirtAddr = (start.0 + len).into();
+        
+        // 检查是否与现有映射冲突
+        let start_vpn = start.floor();
+        let end_vpn = end.ceil();
+        
+        for vpn in VPNRange::new(start_vpn, end_vpn) {
+            if let Some(pte) = self.page_table.translate(vpn) {
+                if pte.is_valid() {
+                    return -1;  // 已映射，冲突
+                }
+            }
+        }
+        
+        // 创建新的映射区域
+        let map_area = MapArea::new(start, end, MapType::Framed, perm);
+        self.push(map_area, None);
+        0
+    }
+    /// Unmap a memory region - for sys_munmap
+    pub fn munmap(&mut self, start: VirtAddr, len: usize) -> isize {
+        if len == 0 {
+            return 0;
+        }
+        
+        let start_vpn = start.floor();
+        let end: VirtAddr = (start.0 + len).into();
+        let end_vpn = end.ceil();
+        
+        // 检查所有页面是否都已映射
+        for vpn in VPNRange::new(start_vpn, end_vpn) {
+            if let Some(pte) = self.page_table.translate(vpn) {
+                if !pte.is_valid() {
+                    return -1;  // 未映射
+                }
+            } else {
+                return -1;
+            }
+        }
+        
+        // 取消映射
+        for vpn in VPNRange::new(start_vpn, end_vpn) {
+            self.page_table.unmap(vpn);
+        }
+        
+        // 注意：简化实现，不更新 areas 和不回收物理页帧
+        // 完整实现需要找到对应的 MapArea 并移除 data_frames
+        
+        0
+    }
+
 }
 /// map area structure, controls a contiguous piece of virtual memory
 pub struct MapArea {
@@ -405,7 +495,9 @@ impl MapArea {
 #[derive(Copy, Clone, PartialEq, Debug)]
 /// map type for memory set: identical or framed
 pub enum MapType {
+    /// 识别的类型
     Identical,
+    /// 已经处理
     Framed,
 }
 

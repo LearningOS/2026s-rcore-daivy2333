@@ -1,0 +1,41 @@
+{
+  "deps": [
+    "call:[trap_from_kernel]"
+  ],
+  "file": "../src/trap/trap.S",
+  "hash": "1b0bd12991d2cfee8e2b6604249a684a096b4b04b3ff6992a811611f85a2cfa5",
+  "lang": "S",
+  "symbols": [
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "__alltraps"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "__restore"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "__emergency"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "__emergency_end"
+    },
+    {
+      "attrs": {},
+      "kind": "label",
+      "name": "__trap_from_kernel"
+    }
+  ],
+  "timestamp": "2026-03-24T10:33:16.156713",
+  "unit": {
+    "module": "trap",
+    "role": "lib"
+  },
+  "version": "pir-analyzer-v1"
+}
