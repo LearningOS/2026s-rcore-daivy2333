@@ -219,6 +219,35 @@ pub fn translated_refmut<T>(token: usize, ptr: *mut T) -> &'static mut T {
         .get_mut()
 }
 
+/// Check if a virtual address has the required permissions
+/// Returns true if the address is mapped with U flag and the required R/W permissions
+pub fn check_permission(token: usize, va: VirtAddr, need_read: bool, need_write: bool) -> bool {
+    let page_table = PageTable::from_token(token);
+    let vpn = va.floor();
+    
+    if let Some(pte) = page_table.translate(vpn) {
+        if !pte.is_valid() {
+            return false;
+        }
+        let flags = pte.flags();
+        // 必须有 U 标志
+        if !flags.contains(PTEFlags::U) {
+            return false;
+        }
+        // 检查 R 权限
+        if need_read && !flags.contains(PTEFlags::R) {
+            return false;
+        }
+        // 检查 W 权限
+        if need_write && !flags.contains(PTEFlags::W) {
+            return false;
+        }
+        true
+    } else {
+        false
+    }
+}
+
 /// An abstraction over a buffer passed from user space to kernel space
 pub struct UserBuffer {
     /// A list of buffers

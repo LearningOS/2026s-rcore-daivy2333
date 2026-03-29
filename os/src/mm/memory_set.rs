@@ -38,7 +38,9 @@ pub fn kernel_token() -> usize {
 
 /// address space
 pub struct MemorySet {
-    page_table: PageTable,
+    /// Page table for this memory set
+    pub page_table: PageTable,
+    /// Memory areas in this memory set
     areas: Vec<MapArea>,
 }
 
@@ -96,6 +98,60 @@ impl MemorySet {
             PTEFlags::R | PTEFlags::X,
         );
     }
+    
+    /// Map a new memory region - for sys_mmap
+    pub fn mmap(&mut self, start: VirtAddr, len: usize, perm: MapPermission) -> isize {
+        if len == 0 {
+            return 0;
+        }
+        
+        let end: VirtAddr = (start.0 + len).into();
+        let start_vpn = start.floor();
+        let end_vpn = end.ceil();
+        
+        // 检查是否与现有映射冲突
+        for vpn in VPNRange::new(start_vpn, end_vpn) {
+            if let Some(pte) = self.page_table.translate(vpn) {
+                if pte.is_valid() {
+                    return -1;  // 已映射，冲突
+                }
+            }
+        }
+        
+        // 创建新的映射区域
+        self.insert_framed_area(start, end, perm);
+        0
+    }
+    
+    /// Unmap a memory region - for sys_munmap
+    pub fn munmap(&mut self, start: VirtAddr, len: usize) -> isize {
+        if len == 0 {
+            return 0;
+        }
+        
+        let start_vpn = start.floor();
+        let end: VirtAddr = (start.0 + len).into();
+        let end_vpn = end.ceil();
+        
+        // 检查所有页面是否都已映射
+        for vpn in VPNRange::new(start_vpn, end_vpn) {
+            if let Some(pte) = self.page_table.translate(vpn) {
+                if !pte.is_valid() {
+                    return -1;  // 未映射
+                }
+            } else {
+                return -1;
+            }
+        }
+        
+        // 取消映射
+        for vpn in VPNRange::new(start_vpn, end_vpn) {
+            self.page_table.unmap(vpn);
+        }
+        
+        0
+    }
+    
     /// Without kernel stacks.
     pub fn new_kernel() -> Self {
         let mut memory_set = Self::new_bare();
