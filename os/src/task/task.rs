@@ -11,6 +11,12 @@ use alloc::vec;
 use alloc::vec::Vec;
 use core::cell::RefMut;
 
+/// Maximum number of syscall types to track
+pub const MAX_SYSCALL_NUM: usize = 500;
+/// BigStride constant for stride scheduling
+pub const BIG_STRIDE: usize = 100000;
+/// Default priority for new processes
+pub const DEFAULT_PRIORITY: usize = 16;
 /// Task control block structure
 ///
 /// Directly save the contents that will not change during running
@@ -71,6 +77,15 @@ pub struct TaskControlBlockInner {
 
     /// Program break
     pub program_brk: usize,
+
+    /// System call count for each syscall number
+    pub syscall_count: [usize; MAX_SYSCALL_NUM],
+
+    /// Process priority for stride scheduling (>= 2)
+    pub priority: usize,
+    
+    /// Current stride for stride scheduling
+    pub stride: usize,
 }
 
 impl TaskControlBlockInner {
@@ -135,6 +150,9 @@ impl TaskControlBlock {
                     ],
                     heap_bottom: user_sp,
                     program_brk: user_sp,
+                    syscall_count: [0; MAX_SYSCALL_NUM],
+                    priority: DEFAULT_PRIORITY,
+                    stride: 0,
                 })
             },
         };
@@ -216,6 +234,9 @@ impl TaskControlBlock {
                     fd_table: new_fd_table,
                     heap_bottom: parent_inner.heap_bottom,
                     program_brk: parent_inner.program_brk,
+                    syscall_count: [0; MAX_SYSCALL_NUM],
+                    priority: parent_inner.priority,
+                    stride: 0,
                 })
             },
         });
@@ -229,6 +250,64 @@ impl TaskControlBlock {
         task_control_block
         // **** release child PCB
         // ---- release parent PCB
+    }
+
+    /// Create a new process from elf_data with parent relationship (for spawn)
+    pub fn spawn(elf_data: &[u8], parent: Arc<TaskControlBlock>) -> Arc<TaskControlBlock> {
+        // memory_set with elf program headers/trampoline/trap context/user stack
+        let (memory_set, user_sp, entry_point) = MemorySet::from_elf(elf_data);
+        let trap_cx_ppn = memory_set
+            .translate(VirtAddr::from(TRAP_CONTEXT_BASE).into())
+            .unwrap()
+            .ppn();
+        // alloc a pid and a kernel stack in kernel space
+        let pid_handle = pid_alloc();
+        let kernel_stack = kstack_alloc();
+        let kernel_stack_top = kernel_stack.get_top();
+        
+        let task_control_block = Arc::new(Self {
+            pid: pid_handle,
+            kernel_stack,
+            inner: unsafe {
+                UPSafeCell::new(TaskControlBlockInner {
+                    trap_cx_ppn,
+                    base_size: user_sp,
+                    task_cx: TaskContext::goto_trap_return(kernel_stack_top),
+                    task_status: TaskStatus::Ready,
+                    memory_set,
+                    parent: Some(Arc::downgrade(&parent)),
+                    children: Vec::new(),
+                    exit_code: 0,
+                    fd_table: vec![
+                        // 0 -> stdin
+                        Some(Arc::new(Stdin)),
+                        // 1 -> stdout
+                        Some(Arc::new(Stdout)),
+                        // 2 -> stderr
+                        Some(Arc::new(Stdout)),
+                    ],
+                    heap_bottom: user_sp,
+                    program_brk: user_sp,
+                    syscall_count: [0; MAX_SYSCALL_NUM],
+                    priority: DEFAULT_PRIORITY,
+                    stride: 0,
+                })
+            },
+        });
+        
+        // Add child to parent's children list
+        parent.inner_exclusive_access().children.push(task_control_block.clone());
+        
+        // prepare TrapContext in user space
+        let trap_cx = task_control_block.inner_exclusive_access().get_trap_cx();
+        *trap_cx = TrapContext::app_init_context(
+            entry_point,
+            user_sp,
+            KERNEL_SPACE.exclusive_access().token(),
+            kernel_stack_top,
+            trap_handler as usize,
+        );
+        task_control_block
     }
 
     /// get pid of process

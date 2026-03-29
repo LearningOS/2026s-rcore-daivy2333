@@ -8,7 +8,7 @@ use crate::{
     mm::{check_permission, translated_refmut, translated_str, VirtAddr},
     task::{
         add_task, current_task, current_user_token, exit_current_and_run_next,
-        suspend_current_and_run_next,
+        suspend_current_and_run_next, TaskControlBlock,
     },
     timer::get_time_us,
 };
@@ -251,12 +251,28 @@ pub fn sys_sbrk(size: i32) -> isize {
 
 /// YOUR JOB: Implement spawn.
 /// HINT: fork + exec =/= spawn
-pub fn sys_spawn(_path: *const u8) -> isize {
-    trace!(
-        "kernel:pid[{}] sys_spawn NOT IMPLEMENTED",
-        current_task().unwrap().pid.0
-    );
-    -1
+pub fn sys_spawn(path: *const u8) -> isize {
+    trace!("kernel:pid[{}] sys_spawn", current_task().unwrap().pid.0);
+    
+    let token = current_user_token();
+    let path_str = translated_str(token, path);
+    
+    // Open the file
+    if let Some(app_inode) = open_file(path_str.as_str(), OpenFlags::RDONLY) {
+        let all_data = app_inode.read_all();
+        
+        // Create a new task (similar to new, but with parent relationship)
+        let current_task = current_task().unwrap();
+        let new_task = TaskControlBlock::spawn(all_data.as_slice(), current_task.clone());
+        let new_pid = new_task.pid.0;
+        
+        // Add new task to scheduler
+        add_task(new_task);
+        
+        new_pid as isize
+    } else {
+        -1
+    }
 }
 
 // YOUR JOB: Set task priority.
