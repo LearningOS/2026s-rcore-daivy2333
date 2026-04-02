@@ -295,7 +295,7 @@ fn check_sem_deadlock(sem_id: usize) -> bool {
         if let Some(waiting_sem) = waiting_on[tid] {
             // Find all threads holding this semaphore
             for holder_tid in 0..thread_count {
-                if allocation[holder_tid][waiting_sem] > 0 {
+                if allocation[holder_tid][waiting_sem] > 0 && holder_tid != tid {
                     wait_for[tid].insert(holder_tid);
                 }
             }
@@ -308,23 +308,16 @@ fn check_sem_deadlock(sem_id: usize) -> bool {
 
     fn has_cycle(
         node: usize,
-        visited: &mut Vec<bool>,
-        in_stack: &mut Vec<bool>,
+        visited: &mut [bool],
+        in_stack: &mut [bool],
         wait_for: &[alloc::collections::BTreeSet<usize>],
-        thread_count: usize,
     ) -> bool {
-        if node >= thread_count {
-            return false;
-        }
         visited[node] = true;
         in_stack[node] = true;
 
         for &neighbor in wait_for[node].iter() {
-            if neighbor >= thread_count {
-                continue;
-            }
             if !visited[neighbor] {
-                if has_cycle(neighbor, visited, in_stack, wait_for, thread_count) {
+                if has_cycle(neighbor, visited, in_stack, wait_for) {
                     return true;
                 }
             } else if in_stack[neighbor] {
@@ -336,13 +329,8 @@ fn check_sem_deadlock(sem_id: usize) -> bool {
         false
     }
 
-    !has_cycle(
-        current_tid,
-        &mut visited,
-        &mut in_stack,
-        &wait_for,
-        thread_count,
-    )
+    // Check if current thread would be in a deadlock cycle
+    !has_cycle(current_tid, &mut visited, &mut in_stack, &wait_for)
 }
 
 /// semaphore down syscall
