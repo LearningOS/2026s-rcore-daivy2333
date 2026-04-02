@@ -242,7 +242,7 @@ pub fn sys_semaphore_up(sem_id: usize) -> isize {
 
     0
 }
-/// Check semaphore deadlock using simple wait-for graph
+/// Check semaphore deadlock - return false if deadlock detected
 fn check_sem_deadlock(sem_id: usize) -> bool {
     let process = current_process();
     let process_inner = process.inner_exclusive_access();
@@ -261,7 +261,7 @@ fn check_sem_deadlock(sem_id: usize) -> bool {
         return true;
     }
 
-    // Build allocation: which threads hold which semaphores
+    // Build allocation matrix from thread_sem_holds
     let mut allocation = vec![vec![0usize; sem_count]; thread_count];
     for ((tid, sid), &count) in process_inner.thread_sem_holds.iter() {
         if *tid < thread_count && *sid < sem_count {
@@ -269,31 +269,29 @@ fn check_sem_deadlock(sem_id: usize) -> bool {
         }
     }
 
-    // Build waiting map: which semaphore each thread is waiting for
+    // Build waiting map from semaphore wait queues
     let mut waiting_on = vec![None::<usize>; thread_count];
-    for (sid, sem_opt) in process_inner.semaphore_list.iter().enumerate() {
-        if let Some(sem) = sem_opt {
+    for sid in 0..sem_count {
+        if let Some(sem) = &process_inner.semaphore_list[sid] {
             let inner = sem.inner.exclusive_access();
-            if inner.count < 0 {
-                for task in inner.wait_queue.iter() {
-                    let tid = task.inner_exclusive_access().res.as_ref().unwrap().tid;
-                    if tid < thread_count {
-                        waiting_on[tid] = Some(sid);
-                    }
+            for task in inner.wait_queue.iter() {
+                let tid = task.inner_exclusive_access().res.as_ref().unwrap().tid;
+                if tid < thread_count {
+                    waiting_on[tid] = Some(sid);
                 }
             }
         }
     }
-    // Current thread will wait for this semaphore
+    // Current thread would wait for this semaphore
     waiting_on[current_tid] = Some(sem_id);
 
-    // Build wait-for graph: thread i waits for thread j if i needs a resource held by j
+    // Build wait-for graph
     let mut wait_for: Vec<alloc::collections::BTreeSet<usize>> =
         vec![alloc::collections::BTreeSet::new(); thread_count];
 
     for tid in 0..thread_count {
         if let Some(waiting_sem) = waiting_on[tid] {
-            // Find all threads holding this semaphore
+            // Find threads holding this semaphore
             for holder_tid in 0..thread_count {
                 if allocation[holder_tid][waiting_sem] > 0 && holder_tid != tid {
                     wait_for[tid].insert(holder_tid);
@@ -302,10 +300,7 @@ fn check_sem_deadlock(sem_id: usize) -> bool {
         }
     }
 
-    // Check for cycles using DFS
-    let mut visited = vec![false; thread_count];
-    let mut in_stack = vec![false; thread_count];
-
+    // Check for cycle using DFS
     fn has_cycle(
         node: usize,
         visited: &mut [bool],
@@ -329,7 +324,10 @@ fn check_sem_deadlock(sem_id: usize) -> bool {
         false
     }
 
-    // Check if current thread would be in a deadlock cycle
+    let mut visited = vec![false; thread_count];
+    let mut in_stack = vec![false; thread_count];
+
+    // Return true if safe (no cycle), false if deadlock (has cycle)
     !has_cycle(current_tid, &mut visited, &mut in_stack, &wait_for)
 }
 
@@ -360,27 +358,47 @@ pub fn sys_semaphore_down(sem_id: usize) -> isize {
         process_inner.deadlock_detection_enabled
     };
 
-    // Quick check for available resources
-    let resources_available = {
+    // Try to acquire without blocking first
+    let can_acquire = {
         let process_inner = process.inner_exclusive_access();
         let sem = process_inner.semaphore_list[sem_id].as_ref().unwrap();
-        let count = sem.inner.exclusive_access().count;
-        count > 0
+        let mut inner = sem.inner.exclusive_access();
+        if inner.count > 0 {
+            // Resource available, acquire it
+            inner.count -= 1;
+            true
+        } else {
+            false
+        }
     };
 
-    // Check deadlock only if resources not available
-    if deadlock_enabled && !resources_available {
+    if can_acquire {
+        // Successfully acquired, record holding
+        if deadlock_enabled {
+            let mut process_inner = process.inner_exclusive_access();
+            let entry = process_inner
+                .thread_sem_holds
+                .entry((current_tid, sem_id))
+                .or_insert(0);
+            *entry += 1;
+        }
+        return 0;
+    }
+
+    // Resource not available, need to check deadlock before blocking
+    if deadlock_enabled {
         if !check_sem_deadlock(sem_id) {
             return DEADLOCK_DETECTED;
         }
     }
 
+    // Perform blocking down
     let process_inner = process.inner_exclusive_access();
     let sem = Arc::clone(process_inner.semaphore_list[sem_id].as_ref().unwrap());
     drop(process_inner);
     sem.down();
 
-    // Record holding
+    // After waking up, record holding
     if deadlock_enabled {
         let mut process_inner = process.inner_exclusive_access();
         let entry = process_inner
