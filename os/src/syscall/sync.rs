@@ -243,7 +243,6 @@ pub fn sys_semaphore_up(sem_id: usize) -> isize {
     0
 }
 /// Check semaphore deadlock - simplified version using wait-for graph
-#[allow(dead_code)]
 fn check_sem_deadlock(sem_id: usize) -> bool {
     let process = current_process();
     let process_inner = process.inner_exclusive_access();
@@ -383,11 +382,9 @@ pub fn sys_semaphore_down(sem_id: usize) -> isize {
 
     // Check deadlock only if resources not available
     if deadlock_enabled && !resources_available {
-        // Temporarily disable semaphore deadlock detection for testing
-        // TODO: Implement proper semaphore deadlock detection
-        // if !check_sem_deadlock(sem_id) {
-        //     return DEADLOCK_DETECTED;
-        // }
+        if !check_sem_deadlock(sem_id) {
+            return DEADLOCK_DETECTED;
+        }
     }
 
     let process_inner = process.inner_exclusive_access();
