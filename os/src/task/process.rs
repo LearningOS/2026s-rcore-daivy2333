@@ -13,8 +13,6 @@ use alloc::string::String;
 use alloc::sync::{Arc, Weak};
 use alloc::vec;
 use alloc::vec::Vec;
-use alloc::collections::BTreeMap;
-use alloc::collections::BTreeSet;
 use core::cell::RefMut;
 
 /// Process Control Block
@@ -51,12 +49,6 @@ pub struct ProcessControlBlockInner {
     pub semaphore_list: Vec<Option<Arc<Semaphore>>>,
     /// condvar list
     pub condvar_list: Vec<Option<Arc<Condvar>>>,
-    /// deadlock detection enabled
-    pub deadlock_detection_enabled: bool,
-    /// threads holding mutex resources: tid -> set of mutex_ids
-    pub thread_mutex_holds: BTreeMap<usize, BTreeSet<usize>>,
-    /// threads holding semaphore resources: (tid, sem_id) -> count
-    pub thread_sem_holds: BTreeMap<(usize, usize), usize>,
 }
 
 impl ProcessControlBlockInner {
@@ -127,9 +119,6 @@ impl ProcessControlBlock {
                     mutex_list: Vec::new(),
                     semaphore_list: Vec::new(),
                     condvar_list: Vec::new(),
-                    deadlock_detection_enabled: false,
-                    thread_mutex_holds: BTreeMap::new(),
-                    thread_sem_holds: BTreeMap::new(),
                 })
             },
         });
@@ -256,9 +245,6 @@ impl ProcessControlBlock {
                     mutex_list: Vec::new(),
                     semaphore_list: Vec::new(),
                     condvar_list: Vec::new(),
-                    deadlock_detection_enabled: false,
-                    thread_mutex_holds: BTreeMap::new(),
-                    thread_sem_holds: BTreeMap::new(),
                 })
             },
         });
