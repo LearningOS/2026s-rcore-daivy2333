@@ -242,7 +242,7 @@ pub fn sys_semaphore_up(sem_id: usize) -> isize {
 
     0
 }
-/// Check semaphore deadlock - simplified version using wait-for graph
+/// Check semaphore deadlock using simple wait-for graph
 fn check_sem_deadlock(sem_id: usize) -> bool {
     let process = current_process();
     let process_inner = process.inner_exclusive_access();
