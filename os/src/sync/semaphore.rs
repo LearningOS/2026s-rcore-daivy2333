@@ -2,7 +2,8 @@
 
 use crate::sync::UPSafeCell;
 use crate::task::{block_current_and_run_next, current_task, wakeup_task, TaskControlBlock};
-use alloc::{collections::VecDeque, sync::Arc};
+use alloc::collections::{BTreeMap, VecDeque};
+use alloc::sync::Arc;
 
 /// semaphore structure
 pub struct Semaphore {
@@ -13,6 +14,10 @@ pub struct Semaphore {
 pub struct SemaphoreInner {
     pub count: isize,
     pub wait_queue: VecDeque<Arc<TaskControlBlock>>,
+    /// holders: tid -> count of resources held by this thread
+    pub holders: BTreeMap<usize, usize>,
+    /// initial count when semaphore was created
+    pub initial_count: isize,
 }
 
 impl Semaphore {
@@ -24,6 +29,8 @@ impl Semaphore {
                 UPSafeCell::new(SemaphoreInner {
                     count: res_count as isize,
                     wait_queue: VecDeque::new(),
+                    holders: BTreeMap::new(),
+                    initial_count: res_count as isize,
                 })
             },
         }
@@ -38,6 +45,18 @@ impl Semaphore {
             if let Some(task) = inner.wait_queue.pop_front() {
                 wakeup_task(task);
             }
+        }
+    }
+
+    /// Try to down the semaphore, return true if success
+    pub fn try_down(&self) -> bool {
+        trace!("kernel: Semaphore::try_down");
+        let mut inner = self.inner.exclusive_access();
+        if inner.count > 0 {
+            inner.count -= 1;
+            true
+        } else {
+            false
         }
     }
 
