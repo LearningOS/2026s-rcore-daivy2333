@@ -5,13 +5,17 @@ use crate::task::TaskControlBlock;
 use crate::task::{block_current_and_run_next, suspend_current_and_run_next};
 use crate::task::{current_task, wakeup_task};
 use alloc::{collections::VecDeque, sync::Arc};
+use core::any::Any;
 
+/// Mutex trait
 /// Mutex trait
 pub trait Mutex: Sync + Send {
     /// Lock the mutex
     fn lock(&self);
     /// Unlock the mutex
     fn unlock(&self);
+    /// Get as Any for downcasting
+    fn as_any(&self) -> &dyn Any;
 }
 
 /// Spinlock Mutex struct
@@ -29,7 +33,6 @@ impl MutexSpin {
 }
 
 impl Mutex for MutexSpin {
-    /// Lock the spinlock mutex
     fn lock(&self) {
         trace!("kernel: MutexSpin::lock");
         loop {
@@ -50,6 +53,10 @@ impl Mutex for MutexSpin {
         let mut locked = self.locked.exclusive_access();
         *locked = false;
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 /// Blocking Mutex struct
@@ -58,8 +65,8 @@ pub struct MutexBlocking {
 }
 
 pub struct MutexBlockingInner {
-    locked: bool,
-    wait_queue: VecDeque<Arc<TaskControlBlock>>,
+    pub locked: bool,
+    pub wait_queue: VecDeque<Arc<TaskControlBlock>>,
 }
 
 impl MutexBlocking {
@@ -75,10 +82,14 @@ impl MutexBlocking {
             },
         }
     }
+
+    /// Get exclusive access to mutex inner
+    pub fn inner_exclusive_access(&self) -> core::cell::RefMut<'_, MutexBlockingInner> {
+        self.inner.exclusive_access()
+    }
 }
 
 impl Mutex for MutexBlocking {
-    /// lock the blocking mutex
     fn lock(&self) {
         trace!("kernel: MutexBlocking::lock");
         let mut mutex_inner = self.inner.exclusive_access();
@@ -91,7 +102,6 @@ impl Mutex for MutexBlocking {
         }
     }
 
-    /// unlock the blocking mutex
     fn unlock(&self) {
         trace!("kernel: MutexBlocking::unlock");
         let mut mutex_inner = self.inner.exclusive_access();
@@ -101,5 +111,9 @@ impl Mutex for MutexBlocking {
         } else {
             mutex_inner.locked = false;
         }
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }

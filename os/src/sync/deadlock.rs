@@ -1,15 +1,16 @@
 //! Deadlock detection
 
 use crate::sync::UPSafeCell;
-use crate::task::current_task;
+use crate::task::{current_process, current_task};
+use alloc::collections::BTreeMap;
+use alloc::vec;
 use alloc::vec::Vec;
 use lazy_static::*;
 
 lazy_static! {
     static ref DEADLOCK_ENABLE: UPSafeCell<bool> = unsafe { UPSafeCell::new(false) };
-    static ref RESOURCE_GRAPH: UPSafeCell<Vec<Vec<usize>>> = unsafe { UPSafeCell::new(Vec::new()) };
-    static ref THREAD_MUTEX_MAP: UPSafeCell<Vec<Vec<usize>>> =
-        unsafe { UPSafeCell::new(Vec::new()) };
+    static ref MUTEX_HOLDERS: UPSafeCell<BTreeMap<usize, usize>> =
+        unsafe { UPSafeCell::new(BTreeMap::new()) };
 }
 
 /// Enable deadlock detection
@@ -24,8 +25,8 @@ pub fn is_deadlock_enabled() -> bool {
     *DEADLOCK_ENABLE.exclusive_access()
 }
 
-/// Check for deadlock
-pub fn check_deadlock(mutex_id: usize) -> bool {
+/// Check for mutex deadlock
+pub fn check_mutex_deadlock(mutex_id: usize, _mutex_locked: bool) -> bool {
     if !is_deadlock_enabled() {
         return false;
     }
@@ -33,18 +34,9 @@ pub fn check_deadlock(mutex_id: usize) -> bool {
     let task = current_task().unwrap();
     let tid = task.inner_exclusive_access().res.as_ref().unwrap().tid;
 
-    let mut graph = RESOURCE_GRAPH.exclusive_access();
-    let mut thread_mutex = THREAD_MUTEX_MAP.exclusive_access();
-
-    if tid >= thread_mutex.len() {
-        thread_mutex.resize(tid + 1, Vec::new());
-    }
-    if mutex_id >= graph.len() {
-        graph.resize(mutex_id + 1, Vec::new());
-    }
-
-    for held_mutex in &thread_mutex[tid] {
-        if *held_mutex == mutex_id {
+    let holders = MUTEX_HOLDERS.exclusive_access();
+    if let Some(&holder_tid) = holders.get(&mutex_id) {
+        if holder_tid == tid {
             return true;
         }
     }
@@ -52,8 +44,8 @@ pub fn check_deadlock(mutex_id: usize) -> bool {
     false
 }
 
-/// Add mutex hold record
-pub fn add_mutex_hold(mutex_id: usize) {
+/// Add mutex holder record
+pub fn add_mutex_holder(mutex_id: usize) {
     if !is_deadlock_enabled() {
         return;
     }
@@ -61,24 +53,104 @@ pub fn add_mutex_hold(mutex_id: usize) {
     let task = current_task().unwrap();
     let tid = task.inner_exclusive_access().res.as_ref().unwrap().tid;
 
-    let mut thread_mutex = THREAD_MUTEX_MAP.exclusive_access();
-    if tid >= thread_mutex.len() {
-        thread_mutex.resize(tid + 1, Vec::new());
-    }
-    thread_mutex[tid].push(mutex_id);
+    let mut holders = MUTEX_HOLDERS.exclusive_access();
+    holders.insert(mutex_id, tid);
 }
 
-/// Remove mutex hold record
-pub fn remove_mutex_hold(mutex_id: usize) {
+/// Remove mutex holder record
+pub fn remove_mutex_holder(mutex_id: usize) {
     if !is_deadlock_enabled() {
         return;
     }
 
-    let task = current_task().unwrap();
-    let tid = task.inner_exclusive_access().res.as_ref().unwrap().tid;
+    let mut holders = MUTEX_HOLDERS.exclusive_access();
+    holders.remove(&mutex_id);
+}
 
-    let mut thread_mutex = THREAD_MUTEX_MAP.exclusive_access();
-    if tid < thread_mutex.len() {
-        thread_mutex[tid].retain(|m| *m != mutex_id);
+/// Check for semaphore deadlock using banker's algorithm
+pub fn check_semaphore_deadlock(sem_id: usize) -> bool {
+    if !is_deadlock_enabled() {
+        return false;
     }
+
+    let process = current_process();
+    let process_inner = process.inner_exclusive_access();
+
+    let sem_count = process_inner.semaphore_list.len();
+    if sem_id >= sem_count {
+        return false;
+    }
+
+    let task_count = process_inner.tasks.len();
+    let current_task = current_task().unwrap();
+    let tid = current_task
+        .inner_exclusive_access()
+        .res
+        .as_ref()
+        .unwrap()
+        .tid;
+
+    let mut available: Vec<isize> = Vec::with_capacity(sem_count);
+    for sem in &process_inner.semaphore_list {
+        if let Some(sem) = sem {
+            let count = sem.inner.exclusive_access().count;
+            available.push(count);
+        } else {
+            available.push(0);
+        }
+    }
+
+    let mut allocation: Vec<Vec<isize>> = Vec::with_capacity(task_count);
+    for task_opt in &process_inner.tasks {
+        if let Some(task) = task_opt {
+            let task_inner = task.inner_exclusive_access();
+            let mut alloc = task_inner.sem_allocation.clone();
+            if alloc.len() < sem_count {
+                alloc.resize(sem_count, 0);
+            }
+            allocation.push(alloc);
+        } else {
+            allocation.push(vec![0; sem_count]);
+        }
+    }
+
+    if tid >= allocation.len() || allocation[tid].len() <= sem_id {
+        return false;
+    }
+
+    available[sem_id] -= 1;
+    allocation[tid][sem_id] += 1;
+
+    let mut work = available;
+    let mut finish: Vec<bool> = vec![false; task_count];
+
+    for i in 0..task_count {
+        if allocation[i].iter().all(|&x| x == 0) {
+            finish[i] = true;
+        }
+    }
+
+    loop {
+        let mut found = false;
+        for i in 0..task_count {
+            if !finish[i] {
+                let can_finish = allocation[i]
+                    .iter()
+                    .zip(work.iter())
+                    .all(|(&alloc, &w)| alloc <= w);
+                if can_finish {
+                    for j in 0..sem_count {
+                        work[j] += allocation[i][j];
+                    }
+                    finish[i] = true;
+                    found = true;
+                }
+            }
+        }
+        if !found {
+            break;
+        }
+    }
+
+    !finish[tid]
 }
