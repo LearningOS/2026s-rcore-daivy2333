@@ -78,20 +78,30 @@ pub fn sys_mutex_lock(mutex_id: usize) -> isize {
     let process_inner = process.inner_exclusive_access();
     let mutex = Arc::clone(process_inner.mutex_list[mutex_id].as_ref().unwrap());
 
-    let mutex_locked = if let Some(m) = mutex.as_any().downcast_ref::<MutexBlocking>() {
-        m.inner_exclusive_access().locked
+    let is_blocking = mutex.as_any().downcast_ref::<MutexBlocking>().is_some();
+
+    if is_blocking {
+        let mutex_locked = if let Some(m) = mutex.as_any().downcast_ref::<MutexBlocking>() {
+            m.inner_exclusive_access().locked
+        } else {
+            false
+        };
+
+        drop(process_inner);
+
+        if check_mutex_deadlock(mutex_id, mutex_locked) {
+            return DEADLOCK_ERR;
+        }
     } else {
-        false
-    };
-
-    drop(process_inner);
-
-    if check_mutex_deadlock(mutex_id, mutex_locked) {
-        return DEADLOCK_ERR;
+        drop(process_inner);
     }
 
     mutex.lock();
-    add_mutex_holder(mutex_id);
+
+    if is_blocking {
+        add_mutex_holder(mutex_id);
+    }
+
     0
 }
 
@@ -107,11 +117,19 @@ pub fn sys_mutex_unlock(mutex_id: usize) -> isize {
             .unwrap()
             .tid
     );
-    remove_mutex_holder(mutex_id);
+
     let process = current_process();
     let process_inner = process.inner_exclusive_access();
     let mutex = Arc::clone(process_inner.mutex_list[mutex_id].as_ref().unwrap());
+
+    let is_blocking = mutex.as_any().downcast_ref::<MutexBlocking>().is_some();
+
     drop(process_inner);
+
+    if is_blocking {
+        remove_mutex_holder(mutex_id);
+    }
+
     mutex.unlock();
     0
 }
